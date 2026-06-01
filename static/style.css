@@ -23,15 +23,16 @@ body {
 .layout {
   width: min(1160px, calc(100% - 32px));
   margin: 32px auto;
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 28px;
+  display: block;
 }
 
 .sidebar {
-  position: sticky;
-  top: 24px;
-  align-self: start;
+  position: fixed;
+  top: 32px;
+  left: max(16px, calc((100vw - 1160px) / 2));
+  width: 220px;
+  max-height: calc(100vh - 64px);
+  overflow: auto;
   padding: 24px;
   background: var(--paper);
   border: 1px solid var(--rule);
@@ -39,8 +40,8 @@ body {
 }
 
 .page {
-  width: 100%;
-  margin: 0;
+  width: auto;
+  margin: 0 0 0 248px;
   padding: 56px;
   background: var(--paper);
   border: 1px solid var(--rule);
@@ -195,7 +196,7 @@ li {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .layout {
     width: 100%;
     min-height: 100vh;
@@ -205,6 +206,9 @@ li {
 
   .sidebar {
     position: static;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
     padding: 24px 20px 0;
     border: 0;
     border-radius: 0;
