@@ -6,6 +6,9 @@ Doctoral student at Keio University researching LiDAR sensing, autonomous drivin
 
 ![Profile photo](product.jpeg)
 
+Affiliation: Keio University, Computer and Sensing Group (CSG)
+Location: Tokyo, Japan
+
 Contact: [Email](mailto:kazu2080@keio.jp) [Google Scholar](https://scholar.google.com/scholar?q=Kazuma+Ikeda+Keio+LiDAR) [GitHub](https://github.com/Keio-CSG) [LinkedIn](https://www.linkedin.com/search/results/people/?keywords=Kazuma%20Ikeda%20Keio) [X](https://x.com/search?q=Kazuma%20Ikeda%20Keio)
 
 ## Education

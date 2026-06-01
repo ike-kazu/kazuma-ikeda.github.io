@@ -121,6 +121,13 @@ def render_markdown(source: str) -> Page:
             sidebar_blocks.append(render_contact_links(line))
             continue
 
+        if line.startswith("Affiliation:") or line.startswith("Location:"):
+            flush_paragraph()
+            flush_list()
+            _, value = line.split(":", 1)
+            sidebar_blocks.append(f'<p class="sidebar-meta">{render_inline(value.strip())}</p>')
+            continue
+
         bullet = re.match(r"^[-*+]\s+(.+)$", line)
         if bullet:
             flush_paragraph()
