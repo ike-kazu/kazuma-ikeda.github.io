@@ -20,9 +20,27 @@ body {
   line-height: 1.6;
 }
 
-.page {
-  width: min(920px, calc(100% - 32px));
+.layout {
+  width: min(1160px, calc(100% - 32px));
   margin: 32px auto;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 28px;
+}
+
+.sidebar {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  padding: 24px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+
+.page {
+  width: 100%;
+  margin: 0;
   padding: 56px;
   background: var(--paper);
   border: 1px solid var(--rule);
@@ -36,20 +54,76 @@ body {
 }
 
 h1 {
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   font-size: 2.3rem;
   line-height: 1.15;
   font-weight: 760;
 }
 
+.page > h1 + p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.page > h1 + p + p {
+  max-width: 680px;
+  margin: 0 0 18px;
+  color: #343a40;
+  font-size: 1rem;
+}
+
 .profile-icon {
   display: block;
-  width: 128px;
-  height: 128px;
-  margin: 18px 0 12px;
+  width: 144px;
+  height: 144px;
+  margin: 0 auto 20px;
   border: 1px solid var(--rule);
   border-radius: 50%;
   object-fit: cover;
+}
+
+.contact-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 760;
+  text-decoration: none;
+}
+
+.contact-link img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.contact-label {
+  color: inherit;
+  font-size: 0.86rem;
+}
+
+.contact-link:hover,
+.contact-link:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
 }
 
 h2 {
@@ -99,6 +173,19 @@ li {
     background: #ffffff;
   }
 
+  .layout {
+    width: 100%;
+    margin: 0;
+    display: block;
+  }
+
+  .sidebar {
+    position: static;
+    margin-bottom: 24px;
+    padding: 0;
+    border: 0;
+  }
+
   .page {
     width: 100%;
     margin: 0;
@@ -109,9 +196,27 @@ li {
 }
 
 @media (max-width: 640px) {
-  .page {
+  .layout {
     width: 100%;
     min-height: 100vh;
+    margin: 0;
+    display: block;
+  }
+
+  .sidebar {
+    position: static;
+    padding: 24px 20px 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .contact-icons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page {
+    width: 100%;
     margin: 0;
     padding: 28px 20px;
     border: 0;

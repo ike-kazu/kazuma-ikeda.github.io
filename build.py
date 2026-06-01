@@ -13,12 +13,14 @@ CONTENT_PATH = ROOT / "resume.md"
 STATIC_DIR = ROOT / "static"
 DIST_DIR = ROOT / "site"
 ASSET_FILES = ("product.jpeg",)
+ASSET_DIRS = ("icon",)
 
 
 @dataclass
 class Page:
     title: str
     body: str
+    sidebar: str
 
 
 def render_inline(text: str) -> str:
@@ -41,9 +43,37 @@ def render_image(alt: str, src: str) -> str:
     return f'<img class="profile-icon" src="{src_attr}" alt="{alt_attr}">'
 
 
+def render_contact_links(text: str) -> str:
+    icon_map = {
+        "Email": "icon/email.png",
+        "Google Scholar": "icon/google-sholar.png",
+        "GitHub": "icon/github.png",
+        "LinkedIn": "icon/linkdin.png",
+        "X": "icon/x.png",
+    }
+    links = re.findall(r"\[([^\]]+)\]\(([^)]+)\)", text)
+    items = []
+    for label, url in links:
+        label_attr = html.escape(label, quote=True)
+        url_attr = html.escape(url, quote=True)
+        icon_src = html.escape(icon_map.get(label, ""), quote=True)
+        if icon_src:
+            icon_html = f'<img src="{icon_src}" alt="" aria-hidden="true">'
+        else:
+            icon_html = f"<span>{html.escape(label[:2], quote=True)}</span>"
+        items.append(
+            f'<a class="contact-link" href="{url_attr}" title="{label_attr}" '
+            f'aria-label="{label_attr}">{icon_html}<span class="contact-label">{label_attr}</span></a>'
+        )
+    if not items:
+        return f"<p>{render_inline(text)}</p>"
+    return '<nav class="contact-icons" aria-label="Contact links">' + "".join(items) + "</nav>"
+
+
 def render_markdown(source: str) -> Page:
     title = "Resume"
     blocks: list[str] = []
+    sidebar_blocks: list[str] = []
     paragraph: list[str] = []
     list_items: list[str] = []
 
@@ -82,7 +112,13 @@ def render_markdown(source: str) -> Page:
         if image:
             flush_paragraph()
             flush_list()
-            blocks.append(render_image(image.group(1).strip(), image.group(2).strip()))
+            sidebar_blocks.append(render_image(image.group(1).strip(), image.group(2).strip()))
+            continue
+
+        if line.startswith("Contact:"):
+            flush_paragraph()
+            flush_list()
+            sidebar_blocks.append(render_contact_links(line))
             continue
 
         bullet = re.match(r"^[-*+]\s+(.+)$", line)
@@ -95,7 +131,7 @@ def render_markdown(source: str) -> Page:
 
     flush_paragraph()
     flush_list()
-    return Page(title=title, body="\n".join(blocks))
+    return Page(title=title, body="\n".join(blocks), sidebar="\n".join(sidebar_blocks))
 
 
 def render_html(page: Page) -> str:
@@ -109,9 +145,14 @@ def render_html(page: Page) -> str:
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="page">
+  <div class="layout">
+    <aside class="sidebar">
+{page.sidebar}
+    </aside>
+    <main class="page">
 {page.body}
-  </main>
+    </main>
+  </div>
 </body>
 </html>
 """
@@ -134,6 +175,10 @@ def build() -> None:
         path = ROOT / filename
         if path.exists():
             shutil.copy2(path, DIST_DIR / filename)
+    for dirname in ASSET_DIRS:
+        path = ROOT / dirname
+        if path.exists():
+            shutil.copytree(path, DIST_DIR / dirname)
 
 
 def main() -> None:

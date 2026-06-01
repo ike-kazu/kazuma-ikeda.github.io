@@ -1,8 +1,12 @@
-# KAZUMA IKEDA (池田 和真)
+# KAZUMA IKEDA
+
+池田 和真
+
+Doctoral student at Keio University researching LiDAR sensing, autonomous driving perception, and sensor security.
 
 ![Profile photo](product.jpeg)
 
-Contact: [kazu2080@keio.jp](mailto:kazu2080@keio.jp)
+Contact: [Email](mailto:kazu2080@keio.jp) [Google Scholar](https://scholar.google.com/scholar?q=Kazuma+Ikeda+Keio+LiDAR) [GitHub](https://github.com/Keio-CSG) [LinkedIn](https://www.linkedin.com/search/results/people/?keywords=Kazuma%20Ikeda%20Keio) [X](https://x.com/search?q=Kazuma%20Ikeda%20Keio)
 
 ## Education
 
