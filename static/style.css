@@ -16,20 +16,21 @@ body {
   margin: 0;
   background: var(--backdrop);
   color: var(--ink);
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-family: "Inter", "Noto Sans CJK JP", "Yu Gothic", "Meiryo", "Hiragino Kaku Gothic ProN", "Segoe UI", system-ui, sans-serif;
   line-height: 1.6;
 }
 
 .layout {
+  position: relative;
   width: min(1160px, calc(100% - 32px));
   margin: 32px auto;
   display: block;
 }
 
 .page-actions {
-  position: fixed;
-  top: 18px;
-  right: 18px;
+  position: absolute;
+  top: 16px;
+  right: 16px;
   z-index: 10;
 }
 

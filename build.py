@@ -174,10 +174,10 @@ def render_html(page: Page) -> str:
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page-actions">
-    {render_pdf_export_link()}
-  </div>
   <div class="layout">
+    <div class="page-actions">
+      {render_pdf_export_link()}
+    </div>
     <aside class="sidebar">
 {page.sidebar}
     </aside>
