@@ -193,9 +193,17 @@ def render_html(page: Page) -> str:
 def find_browser() -> Path | None:
     candidates = [
         "msedge",
+        "microsoft-edge",
+        "microsoft-edge-stable",
         "chrome",
         "chromium",
+        "chromium-browser",
         "google-chrome",
+        "google-chrome-stable",
+        "/usr/bin/google-chrome",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/chromium",
+        "/usr/bin/chromium-browser",
         r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
         r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
         r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -221,7 +229,9 @@ def build_pdf(html_path: Path, pdf_path: Path) -> None:
     command = [
         str(browser),
         "--headless=new",
+        "--no-sandbox",
         "--disable-gpu",
+        "--disable-dev-shm-usage",
         "--no-pdf-header-footer",
         f"--print-to-pdf={pdf_path.resolve()}",
         html_path.resolve().as_uri(),
