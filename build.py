@@ -4,6 +4,7 @@ import argparse
 import html
 import re
 import shutil
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -14,6 +15,7 @@ STATIC_DIR = ROOT / "static"
 DIST_DIR = ROOT / "site"
 ASSET_FILES = ("product.jpeg",)
 ASSET_DIRS = ("icon",)
+PDF_FILENAME = "resume.pdf"
 
 
 @dataclass
@@ -21,6 +23,12 @@ class Page:
     title: str
     body: str
     sidebar: str
+
+
+def print_url(url: str) -> str:
+    if url.startswith("mailto:"):
+        return url.removeprefix("mailto:")
+    return url
 
 
 def render_inline(text: str) -> str:
@@ -31,8 +39,10 @@ def render_inline(text: str) -> str:
 
     def link(match: re.Match[str]) -> str:
         label = match.group(1)
-        url = html.escape(match.group(2), quote=True)
-        return f'<a href="{url}">{label}</a>'
+        raw_url = match.group(2)
+        url = html.escape(raw_url, quote=True)
+        visible_url = html.escape(print_url(raw_url), quote=True)
+        return f'<a href="{url}" data-print-url="{visible_url}">{label}</a>'
 
     return re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, escaped)
 
@@ -56,6 +66,7 @@ def render_contact_links(text: str) -> str:
     for label, url in links:
         label_attr = html.escape(label, quote=True)
         url_attr = html.escape(url, quote=True)
+        visible_url_attr = html.escape(print_url(url), quote=True)
         icon_src = html.escape(icon_map.get(label, ""), quote=True)
         if icon_src:
             icon_html = f'<img src="{icon_src}" alt="" aria-hidden="true">'
@@ -63,11 +74,22 @@ def render_contact_links(text: str) -> str:
             icon_html = f"<span>{html.escape(label[:2], quote=True)}</span>"
         items.append(
             f'<a class="contact-link" href="{url_attr}" title="{label_attr}" '
-            f'aria-label="{label_attr}">{icon_html}<span class="contact-label">{label_attr}</span></a>'
+            f'aria-label="{label_attr}" data-print-url="{visible_url_attr}">'
+            f'{icon_html}<span class="contact-label">{label_attr}</span></a>'
         )
     if not items:
         return f"<p>{render_inline(text)}</p>"
     return '<nav class="contact-icons" aria-label="Contact links">' + "".join(items) + "</nav>"
+
+
+def render_pdf_export_link() -> str:
+    return (
+        f'<a class="contact-link pdf-export-link" href="{PDF_FILENAME}" '
+        'aria-label="Download resume as PDF">'
+        '<span class="pdf-badge" aria-hidden="true">CV</span>'
+        '<span class="contact-label">resume (PDF)</span>'
+        "</a>"
+    )
 
 
 def render_markdown(source: str) -> Page:
@@ -152,6 +174,9 @@ def render_html(page: Page) -> str:
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="page-actions">
+    {render_pdf_export_link()}
+  </div>
   <div class="layout">
     <aside class="sidebar">
 {page.sidebar}
@@ -165,6 +190,45 @@ def render_html(page: Page) -> str:
 """
 
 
+def find_browser() -> Path | None:
+    candidates = [
+        "msedge",
+        "chrome",
+        "chromium",
+        "google-chrome",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    ]
+    for candidate in candidates:
+        resolved = shutil.which(candidate)
+        if resolved:
+            return Path(resolved)
+        path = Path(candidate)
+        if path.exists():
+            return path
+    return None
+
+
+def build_pdf(html_path: Path, pdf_path: Path) -> None:
+    browser = find_browser()
+    if browser is None:
+        raise RuntimeError(
+            "Could not find Microsoft Edge, Google Chrome, or Chromium to generate the PDF."
+        )
+
+    command = [
+        str(browser),
+        "--headless=new",
+        "--disable-gpu",
+        "--no-pdf-header-footer",
+        f"--print-to-pdf={pdf_path.resolve()}",
+        html_path.resolve().as_uri(),
+    ]
+    subprocess.run(command, check=True)
+
+
 def build() -> None:
     source = CONTENT_PATH.read_text(encoding="utf-8")
     page = render_markdown(source)
@@ -173,7 +237,8 @@ def build() -> None:
         shutil.rmtree(DIST_DIR)
     DIST_DIR.mkdir(parents=True)
 
-    (DIST_DIR / "index.html").write_text(render_html(page), encoding="utf-8")
+    html_path = DIST_DIR / "index.html"
+    html_path.write_text(render_html(page), encoding="utf-8")
     if STATIC_DIR.exists():
         for path in STATIC_DIR.iterdir():
             if path.is_file():
@@ -186,6 +251,7 @@ def build() -> None:
         path = ROOT / dirname
         if path.exists():
             shutil.copytree(path, DIST_DIR / dirname)
+    build_pdf(html_path, DIST_DIR / PDF_FILENAME)
 
 
 def main() -> None:
@@ -193,6 +259,7 @@ def main() -> None:
     parser.parse_args()
     build()
     print(f"Built {DIST_DIR / 'index.html'}")
+    print(f"Built {DIST_DIR / PDF_FILENAME}")
 
 
 if __name__ == "__main__":
