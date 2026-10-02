@@ -13,6 +13,12 @@
 #   blurb:   one-line description
 #   <Label>: any other "Label: url" line becomes a link button (PDF, Code, Project, Video, ...)
 
+## Towards Real-Time Full-Waveform LiDAR Transformers
+match: Towards Real-Time Full-Waveform LiDAR Transformers
+image: media/fwl-transformer.png
+venue: NeurIPS 2026
+blurb: Real-time full-waveform LiDAR transformers via intensity-guided token reduction and physics-aware augmentation.
+
 ## Ghost-FWL: A Large-Scale Full-Waveform LiDAR Dataset for Ghost Detection and Removal
 image: media/ghost-fwl.png
 venue: CVPR 2026

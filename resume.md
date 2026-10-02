@@ -28,6 +28,7 @@ Contact: [Email](mailto:kazu2080@keio.jp) [Google Scholar](https://scholar.googl
 
 ## International Publications & Conferences
 
+- K. Ikeda*, K. Oishi*, R. Hara, R. Yoshida, M. Isogawa, K. Yoshioka, "Towards Real-Time Full-Waveform LiDAR Transformers via Intensity-Guided Token Reduction and Physics-Aware Augmentation", Conference on Neural Information Processing Systems (NeurIPS), 2026.
 - K. Ikeda*, R. Hara*, R. Nagata, O. Sako, Z. Ding, T. Kado, I. Fujioka, T. Beppu, M. Isogawa, K. Yoshioka, "Ghost-FWL: A Large-Scale Full-Waveform LiDAR Dataset for Ghost Detection and Removal", Conference on Computer Vision and Pattern Recognition (CVPR), 2026.
 - K. Ikeda, Y. Hayakawa, R. Suzuki, S. Nagai, O. Sako, R. Nagata, R. Yoshida and K. Yoshioka, "Optical LiDAR Communication: Repurposing Existing LiDAR Sensors for Infrastructure-to-Vehicle Communication", IEEE Robotics and Automation Letters, 2025.
 - Y. Hayakawa*, T. Sato*, R. Suzuki*, K. Ikeda, O. Sako, R. Nagata, R. Yoshida, Q. Chen, K. Yoshioka, "Breaking the Shield: Systematic Security Analysis on Pulse Fingerprinting LiDAR Systems for Autonomous Driving", IEEE Sensors Journal, 2025.
